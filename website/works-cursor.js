@@ -27,7 +27,7 @@
     if (!visible || document.body.classList.contains('theater-open')) { hide(); return; }
     const dt = last ? Math.min((now - last) / 1000, .05) : 1 / 60;
     last = now;
-    const follow = reduced.matches ? 1 : 1 - Math.exp(-dt * 22);
+    const follow = reduced.matches ? 1 : 1 - Math.exp(-dt * 7);
     x += (targetX - x) * follow; y += (targetY - y) * follow;
     if (Math.abs(targetX - x) + Math.abs(targetY - y) < .15) {
       x = targetX; y = targetY; paint(); last = 0; return;
@@ -50,3 +50,4 @@
   document.addEventListener('visibilitychange', () => { if (document.hidden) hide(); });
   fine.addEventListener('change', hide);
 })();
+
