@@ -1,0 +1,9 @@
+/* Decorative crosshair for the collection page only. Never captures input. */
+.works-crosshair{position:fixed;inset:0;z-index:10;pointer-events:none;user-select:none;opacity:0;transition:opacity .22s ease;contain:strict}
+.works-crosshair.is-visible{opacity:1}
+.works-crosshair span{position:absolute;display:block;background:rgba(53,83,68,.22);pointer-events:none;will-change:transform}
+.works-crosshair .crosshair-horizontal{left:0;top:0;width:100%;height:1px}
+.works-crosshair .crosshair-vertical{left:0;top:0;height:100%;width:1px}
+.theater-open .works-crosshair{opacity:0}
+@media(hover:none),(pointer:coarse){.works-crosshair{display:none}}
+@media(prefers-reduced-motion:reduce){.works-crosshair{transition:none}}
