@@ -17,16 +17,18 @@
     return inside;
   }
   function create(random=Math.random,viewportWidth=WIDTH){
-    let bird,obstacles,score,state,elapsed,spawn;
-    function reset(){bird={x:Math.min(220,viewportWidth*.23),y:270,vy:0,flap:0};obstacles=[];score=0;state='ready';elapsed=0;spawn=.9;}
+    let bird,obstacles,score,state,elapsed,spawnDistance,speed,lastCenter;
+    function reset(){bird={x:Math.min(220,viewportWidth*.23),y:270,vy:0,flap:0};obstacles=[];score=0;state='ready';elapsed=0;spawnDistance=140;speed=155;lastCenter=270;}
     reset();
     function flap(){if(state==='ready'){state='playing';}if(state==='playing'){bird.vy=-255;bird.flap=.19;}}
     function step(dt){
       if(state!=='playing')return;
       elapsed+=dt;bird.flap=Math.max(0,bird.flap-dt);bird.vy=Math.min(420,bird.vy+740*dt);bird.y+=bird.vy*dt;
-      spawn-=dt;
-      if(spawn<=0){const gap=Math.max(170,215-score*1.5),center=155+random()*230;obstacles.push({x:viewportWidth+30,width:Math.min(105,viewportWidth*.16),center,gap,scored:false});spawn=1.85;}
-      const speed=Math.min(205,155+score*2);
+      const targetSpeed=Math.min(430,155+score*7);
+      speed+=(targetSpeed-speed)*(1-Math.exp(-dt*1.6));
+      spawnDistance-=speed*dt;
+      if(spawnDistance<=0){const gap=Math.max(170,215-score*1.5),center=Math.max(155,Math.min(385,lastCenter+(random()-.5)*180));lastCenter=center;obstacles.push({x:viewportWidth+30,width:Math.min(105,viewportWidth*.16),center,gap,scored:false});spawnDistance+=300;}
+
       for(const o of obstacles){
         o.x-=speed*dt;
         if(!o.scored&&o.x+o.width<bird.x-14){o.scored=true;score++;}
@@ -35,9 +37,10 @@
       obstacles=obstacles.filter(o=>o.x+o.width>-20);
       if(bird.y<23||bird.y>HEIGHT-23)state='over';
     }
-    return {reset,flap,step,pause(){if(state==='playing')state='paused';},resume(){if(state==='paused')state='playing';},get bird(){return bird},get obstacles(){return obstacles},get score(){return score},get state(){return state},get elapsed(){return elapsed}};
+    return {reset,flap,step,pause(){if(state==='playing')state='paused';},resume(){if(state==='paused')state='playing';},get bird(){return bird},get obstacles(){return obstacles},get score(){return score},get state(){return state},get elapsed(){return elapsed},get speed(){return speed}};
   }
   const api={WIDTH,HEIGHT,create,polygon,circlePolygon};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   else root.IslandFlight=api;
 })(typeof window!=='undefined'?window:globalThis);
+
