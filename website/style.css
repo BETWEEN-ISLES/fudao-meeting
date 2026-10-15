@@ -7,3 +7,31 @@ body{isolation:isolate}
 #liquid{z-index:0;pointer-events:none}
 .sky-glow{z-index:1;background:linear-gradient(110deg,rgba(223,239,235,.42),rgba(210,230,235,.30) 55%,rgba(171,207,209,.24))}
 main,footer{position:relative;z-index:2}
+
+/* Exhibition signpost: decorative directions, with real event information. */
+.home-links{display:flex;align-items:center;gap:32px}
+.exhibition-route{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center;padding:88px 9vw 80px;background:linear-gradient(125deg,rgba(232,243,238,.95),rgba(214,233,232,.96));border-top:1px solid var(--line);overflow:hidden}
+.route-copy .section-label{margin-bottom:32px}
+.route-intro{font-size:14px;line-height:2.3;letter-spacing:.06em;color:var(--muted);margin:26px 0 28px}
+.route-note{display:flex;gap:9px;align-items:center;font-size:11px;line-height:1.8;color:var(--muted)}
+.route-note>span{width:5px;height:5px;border-radius:50%;background:#688e83;flex-shrink:0}
+.signpost{position:relative;max-width:480px;width:100%;justify-self:center;padding:0 16px 64px}
+.signpost-label{position:relative;text-align:center;letter-spacing:.14em;font-size:9px;color:#486e71;margin:0 0 24px;z-index:1}
+.signpost::before{content:'';position:absolute;top:48px;bottom:15px;width:12px;left:calc(50% - 6px);border-radius:6px;background:linear-gradient(90deg,#7a9996,#abc2b8 45%,#7d9c96);box-shadow:5px 0 14px #456d6410}
+.signpost-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:19px;position:relative;z-index:1}
+.route-sign{position:relative;display:flex;justify-content:space-between;align-items:center;min-height:138px;padding:20px 48px 20px 30px;filter:drop-shadow(0 9px 7px #466c6818);isolation:isolate}
+.route-sign::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:5px;background:var(--sign-color);clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%)}
+.route-sign::after{content:'';position:absolute;top:15px;left:48%;width:4px;height:4px;border-radius:50%;background:#426b6255;box-shadow:0 109px 0 #426b6255}
+.sign-mint{--sign-color:#bdd8c9;transform:rotate(-3deg);margin-right:8px}
+.sign-blue{--sign-color:#bcd2df;transform:rotate(2.5deg);margin-left:8px;padding:20px 28px 20px 46px}
+.sign-blue::before{clip-path:polygon(10% 0,100% 0,100% 100%,10% 100%,0 50%)}
+.sign-sage{--sign-color:#ccdbc3;transform:rotate(-2deg);margin-right:18px}
+.sign-index{font-size:8px;letter-spacing:.18em;color:#44675f}
+.sign-content h3{font-family:'Noto Serif TC',serif;font-weight:600;font-size:clamp(22px,2.1vw,29px);letter-spacing:.12em;line-height:1.5;margin:7px 0 10px}
+.sign-content p{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.1em;margin:0;color:#365c5b}
+.date-dot{width:5px;height:5px;border:1px solid #587f74;border-radius:50%}
+.sign-arrow{font-family:Arial,sans-serif;font-size:36px;font-weight:300;margin-left:18px;color:#426d69}
+.sign-blue .sign-arrow{margin:0 18px 0 0}
+.signpost-ground{position:absolute;bottom:8px;left:calc(50% - 68px);width:136px;height:13px;border-radius:50%;background:#92b5a838}
+@media(max-width:900px){.exhibition-route{padding:70px 7vw;gap:5vw}.signpost{padding-left:0;padding-right:0}.route-sign{padding-left:22px;padding-right:38px}.sign-blue{padding-left:38px;padding-right:22px}.sign-arrow{font-size:29px}.sign-content h3{font-size:23px}}
+@media(max-width:650px){.home-links{gap:15px}.home-links .nav-link span{display:none}.home-links .nav-link{font-size:10px}.exhibition-route{grid-template-columns:1fr;padding:58px 8vw 44px;gap:40px}.route-copy .section-label{font-size:9px;margin-bottom:22px}.route-intro{font-size:12px;margin:20px 0}.route-note{font-size:10px}.signpost{max-width:400px}.route-sign{min-height:132px}.sign-content h3{font-size:25px}.signpost-label{font-size:8px}.route-sign::after{box-shadow:0 102px 0 #426b6255}}
