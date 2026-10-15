@@ -103,34 +103,5 @@
     document.querySelector('#media-message').textContent = '影片暫時無法播放';
   });
   render();
-  // Animate once on entering view; keep the unit and accessible label stable.
-  const islandCount = document.querySelector('#island-count');
-  if (islandCount && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const numberText = islandCount.firstChild;
-    let played = false;
-    function startCount() {
-      if (played) return;
-      played = true;
-      let started;
-      numberText.nodeValue = '1';
-      function tick(now) {
-        if (started === undefined) started = now;
-        const progress = Math.min((now - started) / 1150, 1);
-        const eased = 1 - Math.pow(1 - progress, 1.7);
-        numberText.nodeValue = String(1 + Math.floor(31 * eased));
-        if (progress < 1) window.requestAnimationFrame(tick);
-      }
-      window.requestAnimationFrame(tick);
-    }
-    if ('IntersectionObserver' in window) {
-      const observer = new window.IntersectionObserver(entries => {
-        if (entries.some(entry => entry.isIntersecting)) {
-          observer.disconnect();
-          startCount();
-        }
-      }, { threshold: 0.35 });
-      observer.observe(islandCount);
-    } else startCount();
-  }
 })();
 
