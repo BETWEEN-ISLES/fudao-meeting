@@ -80,22 +80,10 @@ a:focus-visible,button:focus-visible{outline-color:#6b527d}
 @media(max-width:650px){.navigation .brand,.topbar .brand{gap:7px}.brand .brand-icon{width:34px;height:34px}}
 
 
-/* Home navigation: a single elongated capsule with visible interactive links. */
-.home-page .navigation{top:20px;left:5vw;right:5vw;width:auto;padding:12px 18px 12px 26px;min-height:76px;gap:20px;border:1px solid rgba(93,122,87,.3);border-radius:999px;background:rgba(248,247,231,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 8px 30px rgba(46,76,54,.09),inset 0 1px 0 rgba(255,255,255,.8)}
-.home-page .navigation .brand{flex-shrink:0;border-radius:12px;padding:5px 0;transition:opacity .2s}
-.home-page .navigation .brand:hover{opacity:.72}
-.home-page .home-links{gap:9px}
-.home-page .home-links .nav-link{display:flex;align-items:center;justify-content:center;gap:18px;min-height:44px;padding:11px 20px;border:1px solid #c2ceb8;border-radius:999px;background:#e7eddd;color:#254c3c;font-weight:400;white-space:nowrap;transition:background .2s,border-color .2s,box-shadow .2s}
-.home-page .home-links .nav-link span{display:inline;margin:0;font-size:15px}
-.home-page .home-links .nav-link:hover{background:#d4e1c5;border-color:#809775;box-shadow:0 3px 10px #365f4b12}
-.home-page .home-links .nav-link:active{background:#c6d7b4}
-.home-page .home-links .nav-link:focus-visible{outline:2px solid #6b527d;outline-offset:3px}
-@media(max-width:650px){
-  .home-page .navigation{top:14px;left:4vw;right:4vw;gap:8px;min-height:66px;padding:10px 12px 10px 17px}
-  .home-page .navigation .brand{font-size:15px;letter-spacing:.12em}
-  .home-page .navigation .brand span{font-size:7px;letter-spacing:.17em}
-  .home-page .home-links{gap:5px}
-  .home-page .home-links .nav-link{font-size:10px;letter-spacing:0;min-height:44px;gap:0;padding:10px 9px}
-  .home-page .home-links .nav-link span{display:none}
-}
-@media(prefers-reduced-motion:reduce){.home-page .navigation .brand,.home-page .home-links .nav-link{transition:none}}
+/* Persistent collection navigation; sticky preserves the header's layout space. */
+body.works-page>header.topbar{position:sticky;top:0;z-index:20;background:var(--paper,#f4f1e4);gap:18px}
+body.works-page>header.topbar .brand{flex-shrink:0}
+body.works-page>header.topbar nav{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:12px 26px}
+body.works-page #collection,body.works-page #page-title{scroll-margin-top:120px}
+body.works-page>.skip:focus{position:fixed;z-index:30}
+@media(max-width:600px){body.works-page>header.topbar{gap:12px}body.works-page>header.topbar nav{gap:10px 16px}body.works-page #collection,body.works-page #page-title{scroll-margin-top:105px}}
