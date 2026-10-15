@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="forest-theme.css?v=icon-20261015">
   <link rel="icon" type="image/png" href="assets/fudao-icon.png?v=1">
+  <link rel="stylesheet" href="entry-choice.css?v=1">
+  <script src="entry-choice.js?v=1" defer></script>
 </head>
 <body class="home-page">
   <canvas id="liquid" aria-hidden="true"></canvas>
@@ -46,8 +48,16 @@
   </main>
   <footer><span>浮島之間</span><span>多媒體動畫系 / BETWEEN ISLANDS</span></footer>
   <script src="script.js?v=forest-20261015"></script>
+  <dialog id="entry-choice" aria-labelledby="entry-choice-title" aria-describedby="entry-choice-description">
+    <button type="button" id="dismiss-choice" aria-label="關閉詢問框">×</button>
+    <p class="choice-kicker">BETWEEN ISLANDS / 選擇你的旅程</p>
+    <h2 id="entry-choice-title">是否進入島嶼？</h2>
+    <p class="choice-hint" id="entry-choice-description">進入作品展，或先在浮島之間飛一會。</p>
+    <div class="choice-options"><a href="works.html" autofocus>是<span>前往作品展</span></a><a href="flight.html">否<span>先去浮島飛行</span></a></div>
+  </dialog>
 </body>
 </html>
+
 
 
 

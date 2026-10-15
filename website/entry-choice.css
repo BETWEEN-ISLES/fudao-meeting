@@ -1,0 +1,11 @@
+#entry-choice{width:min(460px,calc(100% - 36px));padding:36px;border:1px solid #bdcbb6;border-radius:14px;background:#f4f1e4;color:#254c3c;box-shadow:0 28px 100px #162c3440;text-align:center}
+#entry-choice::backdrop{background:#132e3766;backdrop-filter:blur(7px)}
+#entry-choice .choice-kicker{font-size:9px;letter-spacing:.23em;margin:8px 0 22px}
+#entry-choice h2{font-size:27px;letter-spacing:.06em;line-height:1.5;margin:0 0 14px}
+#entry-choice .choice-hint{font-size:12px;line-height:1.9;color:#526758;margin:0 0 25px}
+.choice-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice-options a{padding:17px 10px;border:1px solid #91a589;border-radius:8px;font-size:22px;background:#e1e8d6}
+.choice-options a:first-child{background:#365f4b;color:#fffaf0;border-color:#365f4b}
+.choice-options a span{display:block;font-size:10px;margin-top:8px;letter-spacing:.05em}
+.choice-options a:hover{filter:brightness(.96)}
+#dismiss-choice{position:absolute;right:12px;top:9px;border:0;background:transparent;font-size:25px;color:#526758;cursor:pointer;padding:5px 10px}
