@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#dceff0"><title>浮島飛行｜浮島之間</title>
+  <link rel="icon" type="image/png" href="assets/fudao-icon.png">
+  <link rel="stylesheet" href="flight.css?v=1">
+  <script src="flight-engine.js?v=acceleration-2" defer></script><script src="flight.js?v=1" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="index.html">浮島之間 <span>BETWEEN ISLANDS</span></a><nav><a href="index.html">回到首頁</a><a href="works.html">前往作品展 ↗</a></nav></header>
+  <main>
+    <div class="game-heading"><div><p>TAKE A LITTLE DETOUR</p><h1>先讓子彈，飛一會。</h1></div><p>點擊振翅，放開滑翔。<br>穿越浮島之間的縫隙，看看能飛多遠。</p></div>
+    <section class="game-wrap" aria-label="浮島飛行遊戲">
+      <canvas id="flight" tabindex="0" aria-label="飛行區。點擊、空白鍵或向上鍵振翅；P 暫停。"></canvas>
+      <div class="hud"><span>穿越 <strong id="score">0</strong></span><span>最佳 <strong id="best">0</strong></span><button id="pause" type="button" disabled>暫停 Ⅱ</button></div>
+      <div class="game-panel" id="game-panel"><p class="panel-kicker">BETWEEN THE FLOATING ISLANDS</p><h2 id="panel-title">準備起飛了嗎？</h2><p id="panel-description">點擊畫面、輕觸螢幕或按空白鍵，讓羽翼精靈振翅上升。</p><button id="start" type="button">開始飛行 ↗</button><a href="works.html">或先去看看作品 →</a></div>
+      <p id="game-status" class="sr-only" role="status" aria-live="polite"></p>
+    </section>
+    <div class="game-notes"><span>點擊 / 空白鍵 / ↑ 振翅</span><span>P 暫停 · 碰到島嶼或邊界，挑戰結束</span><span>最佳紀錄儲存在這台裝置</span></div>
+  </main>
+  <footer>在浮島之間，留一點時間給飛翔。<a href="works.html">回到 32 座創作島嶼 ↗</a></footer>
+</body>
+</html>
+

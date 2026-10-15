@@ -1,0 +1,6 @@
+/* Display the original logo at its artwork bounds, without editing the PNG.
+   Original: 1431x1404; nontransparent bounds: (427,411)-(918,1121). */
+.site-logo{display:block;position:relative;overflow:hidden;width:47.03px;height:68px;flex:none}
+.site-logo img{display:block;position:absolute;width:291.446%;height:auto;max-width:none;left:-86.965%;top:-57.887%}
+.navigation .brand,.topbar .brand{display:flex;align-items:center}
+@media(max-width:650px){.site-logo{width:38.73px;height:56px}}
