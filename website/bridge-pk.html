@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f4f1e4">
+  <title>雙人搭橋 PK｜浮島之間</title><link rel="icon" type="image/png" href="assets/fudao-icon.png">
+  <link rel="stylesheet" href="bridge.css?v=clear-pk-2"><link rel="stylesheet" href="brand-logo.css?v=1"><link rel="stylesheet" href="bridge-pk.css?v=1"><link rel="stylesheet" href="game-selector.css?v=1">
+  <script src="bridge-engine.js?v=clear-pk-2" defer></script><script src="bridge-feedback.js?v=1" defer></script><script src="bridge-pk.js?v=feedback-3" defer></script>
+  <link rel="stylesheet" href="bridge-feedback.css?v=1">
+</head>
+<body>
+  <header class="game-top"><a class="brand" href="index.html"><span class="site-logo"><img src="assets/brand-logo.png" alt="浮島之間 BETWEEN ISLANDS" width="1431" height="1404"></span></a><nav><a href="index.html">回到首頁</a><a href="works.html">前往作品展 ↗</a></nav></header>
+  <main class="pk-main">
+    <div class="bridge-heading"><div><p class="kicker">GAME 02 / TWO ISLANDS, ONE CHALLENGE</p><h1>一起搭橋，各憑本事。</h1></div><p>同一台裝置，兩座棋盤。<br>消排拿分，搭橋才有資格獲勝。</p></div>
+    <nav class="bridge-modes" aria-label="搭橋遊戲模式"><a href="bridge.html">單人搭橋</a><a href="bridge-pk.html" aria-current="page">雙人同機 PK</a></nav>
+    <div class="bridge-tools"><button id="show-game-rules" type="button">玩法說明 ?</button><button id="toggle-game-sound" type="button" aria-pressed="true">音效：開</button></div>
+    <section class="match-controls" aria-label="對戰設定"><button id="start-pk" type="button">開始雙人對戰 ↗</button><p>共同倒數 <strong id="pk-clock">02:00</strong></p></section>
+    <p id="match-status" class="pk-summary" role="status" aria-live="polite">閱讀玩法並確認後，雙人對戰才開始倒數。</p>
+    <div id="pk-arena" class="pk-arena" tabindex="-1">
+      <section class="pk-player player-one" aria-labelledby="player-one-title"><div class="player-heading"><h2 id="player-one-title">玩家 1 <span>WASD</span></h2><p>分數 <strong id="p1-score">0</strong></p></div><p class="player-state" id="p1-state">等待開始</p><div class="shore finish"><span>終點</span><span>FINISH</span></div><div id="p1-board" class="bridge-board" role="group" aria-label="玩家 1 棋盤，6 欄 7 列"></div><div class="shore start"><span>起點</span><span>START</span></div><div id="p1-tray" class="piece-tray" role="group" aria-label="玩家 1 候選方塊"></div><p class="key-guide"><kbd>W A S D</kbd> 移動　<kbd>Q</kbd> 旋轉<br><kbd>空白鍵</kbd> 放置　<kbd>1 2 3</kbd> 選方塊</p></section>
+      <section class="pk-player player-two" aria-labelledby="player-two-title"><div class="player-heading"><h2 id="player-two-title">玩家 2 <span>↑ ← ↓ →</span></h2><p>分數 <strong id="p2-score">0</strong></p></div><p class="player-state" id="p2-state">等待開始</p><div class="shore finish"><span>終點</span><span>FINISH</span></div><div id="p2-board" class="bridge-board" role="group" aria-label="玩家 2 棋盤，6 欄 7 列"></div><div class="shore start"><span>起點</span><span>START</span></div><div id="p2-tray" class="piece-tray" role="group" aria-label="玩家 2 候選方塊"></div><p class="key-guide"><kbd>方向鍵</kbd> 移動　<kbd>右 Shift</kbd> 旋轉<br><kbd>Enter</kbd> 放置　<kbd>7 8 9</kbd> 選方塊</p></section>
+    </div>
+    <nav class="game-selector" aria-label="選擇遊戲"><div><span>ANOTHER LITTLE JOURNEY</span><h2>換一種方式，遊逛浮島。</h2></div><a href="flight.html"><span>GAME 01</span><strong>浮島飛行 ↗</strong><small>振翅、滑翔，穿越島嶼</small></a><a href="bridge.html"><span>GAME 02</span><strong>單人方塊搭橋 ↗</strong><small>先想一想，再搭下一步</small></a></nav>
+  </main>
+  <footer class="bridge-footer"><span>浮島之間 / BETWEEN ISLANDS</span><a href="works.html">前往作品展 ↗</a></footer>
+  <dialog id="pk-result" aria-labelledby="pk-result-title"><p class="kicker">THE RESULTS / 本局結算</p><h2 id="pk-result-title"></h2><p id="pk-result-description"></p><div class="pk-table-wrap"><table><caption class="visually-hidden">雙人搭橋對戰結果</caption><thead><tr><th scope="col">玩家</th><th scope="col">搭橋</th><th scope="col">消排</th><th scope="col">總分</th></tr></thead><tbody id="pk-results"></tbody></table></div><p id="pk-score-detail"></p><button type="button" class="primary" id="again-pk">再比一局 ↗</button><button type="button" class="text-button" id="inspect-pk">查看棋盤</button></dialog>
+<dialog id="game-rules" aria-labelledby="game-rules-title"><p class="kicker">BEFORE WE BEGIN / 雙人搭橋 PK</p><h2 id="game-rules-title">先看規則，再搭橋。</h2><ol><li>選擇方塊，移動預覽；深紅斜紋代表這裡放不下。</li><li>橫排填滿會加分並消除，其他方塊不下落。</li><li>消排後，剩下的方塊須由底部連到頂部，才算搭橋成功。</li></ol><h3>兩組鍵盤，同時操作</h3><table class="rules-keymap"><thead><tr><th scope="col">操作</th><th scope="col">玩家 1</th><th scope="col">玩家 2</th></tr></thead><tbody><tr><td>移動</td><td>WASD</td><td>方向鍵</td></tr><tr><td>旋轉</td><td>Q</td><td>右 Shift</td></tr><tr><td>放置</td><td>空白鍵</td><td>Enter</td></tr><tr><td>選方塊</td><td>1／2／3</td><td>7／8／9</td></tr></tbody></table><label class="rules-duration" for="pk-duration">每局時間 <select id="pk-duration"><option value="60">60 秒</option><option value="90">90 秒</option><option value="120" selected>120 秒</option></select></label><section class="pk-rules"><h2>先有橋，再比分。</h2><p>橫排填滿：每排 ＋150，第二排起每排額外 ＋100；得分橫排立即消除，其他方塊不下落。每次放置 ＋40，成功搭橋 ＋500，通關每剩一空格 ＋10。</p><p>兩人各自從底部連到頂部，上下左右相接才算搭橋。搭橋成功者當場結算、等待對手；無處可放或時間到仍未搭橋者，不能獲勝。已搭橋者分數最高者勝，同分並列；兩人都沒搭橋，本局無人獲勝。</p><p>兩人使用相同的初始方塊與補塊序列。對戰不提供撤回；切換分頁也不暫停倒數。也可點選各自的候選方塊與棋盤操作。</p></section>
+    <p class="rules-warning">倒數只在初次按「確認，開始遊戲」後啟動。對戰中重開說明或切換分頁，時間仍繼續計算。</p><button id="confirm-rules" class="primary" type="button" autofocus>確認，開始遊戲</button><a class="rule-exit" href="index.html">先回首頁</a></dialog>
+</body>
+</html>

@@ -1,0 +1,36 @@
+/* Shared feedback and entry instructions for the two bridge modes. */
+.bridge-tools{display:flex;gap:9px;align-items:center;justify-content:flex-end;margin:-5px 0 20px;flex-wrap:wrap}
+.bridge-tools button{border:1px solid #a8b59b;border-radius:25px;background:#faf8ec;color:#365f4b;font-size:11px;padding:9px 15px;min-height:38px}
+.bridge-tools button:hover{background:#e4ecd6}
+.cell.preview-invalid{background:repeating-linear-gradient(135deg,#a83f47 0,#a83f47 6px,#883039 6px,#883039 11px)!important;box-shadow:inset 0 0 0 2px #5a1922!important;border-color:#661d27!important}
+.pk-player .cell.cursor.preview-invalid{outline-color:#ffd9d1}
+.cell.preview-valid{background:#749c76a6;box-shadow:inset 0 0 0 2px #365f4b}
+.feedback-host{position:relative}
+.feedback-toast{position:absolute;top:35%;left:50%;z-index:4;pointer-events:none;user-select:none;transform:translate(-50%,-40%);opacity:0;transition:opacity .15s,transform .25s;background:#f9f4dfed;border:1px solid #728e62;border-radius:30px;padding:12px 22px;box-shadow:0 8px 30px #254c3c30;color:#254c3c;font-weight:600;font-size:20px;white-space:nowrap}
+.feedback-toast.is-visible{opacity:1;transform:translate(-50%,-65%)}
+.feedback-toast.error{background:#f7e3df;color:#7b2731;border-color:#a4575b;font-size:17px}
+.feedback-toast.clear{background:#eee6c7;border-color:#a58a4c;color:#665028}
+.feedback-toast.win{background:#e7def0;border-color:#8b72a3;color:#5b426c}
+.placement-shake{animation:placement-shake .26s ease-out}
+@keyframes placement-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+#game-rules{width:min(620px,calc(100% - 30px));max-height:90dvh;overflow:auto;padding:30px;border:1px solid #b7c6ab;border-radius:14px;background:#f4f1e4;color:#254c3c;box-shadow:0 25px 100px #1c3e4140}
+#game-rules::backdrop{background:#173b4780;backdrop-filter:blur(7px)}
+#game-rules h2{font:500 28px/1.5 'Noto Serif TC',serif;margin:14px 0 18px}
+#game-rules h3{font-size:14px;font-weight:500;margin:18px 0 10px}
+#game-rules p,#game-rules li{font-size:12px;line-height:1.9;color:#526758}
+#game-rules ol{padding-left:22px}
+#game-rules .rules,#game-rules .pk-rules{border:0;padding:0;margin:0}
+#game-rules .rules h2,#game-rules .pk-rules h2{font-size:17px;margin:15px 0 10px}
+#game-rules .rules p,#game-rules .pk-rules p{font-size:12px}
+.rules-keymap{width:100%;border-collapse:collapse;margin:16px 0;font-size:11px}.rules-keymap th,.rules-keymap td{text-align:left;padding:9px;border-bottom:1px solid #c3ceba}
+.rule-exit{display:block;text-align:center;font-size:11px;text-decoration:underline;text-underline-offset:4px;margin-top:5px}
+.rules-duration{padding:12px 14px;background:#e5ecda;border-radius:6px;display:block;font-size:12px;margin:18px 0}
+.rules-duration select{font:inherit;margin-left:15px;padding:6px 12px;background:#faf8ec;color:#254c3c;border:1px solid #a8b59b;border-radius:4px}
+.rules-warning{background:#e5e9d7;padding:12px;border-radius:6px}
+.bridge-layout{grid-template-columns:minmax(0,1.05fr) minmax(280px,.85fr);gap:35px}
+.control-panel .bridge-message{margin-bottom:8px}
+.match-controls{justify-content:space-between}.match-controls p{margin-left:0}
+.pk-summary{min-height:20px}
+@media(max-width:800px){.bridge-layout{grid-template-columns:1fr;gap:20px}.bridge-tools{justify-content:flex-start;margin-top:0}.feedback-toast{font-size:17px;padding:10px 16px}}
+@media(max-width:750px){.pk-player .feedback-toast{font-size:12px;padding:8px 10px}.pk-player .feedback-toast.error{font-size:12px}#game-rules{padding:23px}.rules-keymap th,.rules-keymap td{padding:8px 5px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.placement-shake{animation:none}.feedback-toast{transition:none;transform:translate(-50%,-50%)}.feedback-toast.is-visible{transform:translate(-50%,-50%)}}

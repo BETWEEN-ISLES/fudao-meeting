@@ -25,9 +25,9 @@
     return false;
   });}
   function create(random=Math.random){
-    let board,tray,rows,placed,rowPoints,bonus,state,path,history;
+    let board,tray,rows,placed,rowPoints,bonus,state,path,history,reason;
     const draw=()=>Math.min(SHAPES.length-1,Math.floor(random()*SHAPES.length));
-    function reset(){board=Array(COLS*ROWS).fill(0);tray=[draw(),draw(),draw()];rows=[];placed=0;rowPoints=0;bonus=0;state='playing';path=[];history=[];}
+    function reset(){board=Array(COLS*ROWS).fill(0);tray=[draw(),draw(),draw()];rows=[];placed=0;rowPoints=0;bonus=0;state='playing';path=[];history=[];reason='';}
     reset();
     function place(slot,turns,x,y){
       if(state!=='playing'||!Number.isInteger(slot)||slot<0||slot>2)return {ok:false};
@@ -35,17 +35,27 @@
       if(!fits(board,shape,x,y))return {ok:false};
       history.push({board:[...board],tray:[...tray],rows:[...rows],placed,rowPoints});
       for(const [dx,dy]of shape)board[(y+dy)*COLS+x+dx]=tray[slot]+1;
-      placed++;let completed=0;
-      for(let r=0;r<ROWS;r++)if(!rows.includes(r)&&board.slice(r*COLS,(r+1)*COLS).every(Boolean)){rows.push(r);completed++;}
+      placed++;const cleared=[];
+      for(let r=0;r<ROWS;r++)if(board.slice(r*COLS,(r+1)*COLS).every(Boolean))cleared.push(r);
+      const completed=cleared.length;
+      // Clear full rows in place, without gravity. Only the remaining board
+      // counts toward the start-to-finish connection, including on this move.
+      for(const r of cleared)for(let x=0;x<COLS;x++)board[r*COLS+x]=0;
+      rows.push(...cleared);
       const gained=completed*150+Math.max(0,completed-1)*100;rowPoints+=gained;
       tray[slot]=draw();path=route(board);
       if(path.length){state='won';bonus=500+board.filter(v=>!v).length*10;}
-      else if(!movesAvailable(board,tray))state='lost';
-      return {ok:true,completed,gained};
+      else if(!movesAvailable(board,tray)){state='lost';reason='blocked';}
+      return {ok:true,completed,gained,cleared};
     }
     function undo(){if(state!=='playing'||!history.length)return false;const old=history.pop();({board,tray,rows,placed,rowPoints}=old);bonus=0;path=[];return true;}
-    return {reset,place,undo,get board(){return [...board]},get tray(){return [...tray]},get rows(){return [...rows]},get placed(){return placed},get rowPoints(){return rowPoints},get bonus(){return bonus},get score(){return placed*40+rowPoints+bonus},get state(){return state},get path(){return [...path]},get canUndo(){return state==='playing'&&history.length>0}};
+    return {reset,place,undo,expire(){if(state==='playing'){state='lost';reason='time';}},get reason(){return reason},get clearedRows(){return rows.length},get board(){return [...board]},get tray(){return [...tray]},get rows(){return [...rows]},get placed(){return placed},get rowPoints(){return rowPoints},get bonus(){return bonus},get score(){return placed*40+rowPoints+bonus},get state(){return state},get path(){return [...path]},get canUndo(){return state==='playing'&&history.length>0}};
   }
-  const api={COLS,ROWS,SHAPES,rotate,fits,route,movesAvailable,create};
+  function seeded(seed){let value=seed>>>0;return()=>{value=(value*1664525+1013904223)>>>0;return value/4294967296;};}
+  function rank(records){
+    const eligible=records.filter(r=>r.won),high=eligible.length?Math.max(...eligible.map(r=>r.score)):null;
+    return {winners:eligible.filter(r=>r.score===high),ordered:[...records].sort((a,b)=>Number(b.won)-Number(a.won)||b.score-a.score)};
+  }
+  const api={COLS,ROWS,SHAPES,rotate,fits,route,movesAvailable,create,seeded,rank};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.IslandBridge=api;
 })(typeof window!=='undefined'?window:globalThis);
