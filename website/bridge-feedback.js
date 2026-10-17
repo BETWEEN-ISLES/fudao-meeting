@@ -2,7 +2,7 @@
   'use strict';
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
   const rules=document.querySelector('#game-rules'),confirm=document.querySelector('#confirm-rules');
-  let acknowledged=false,sound=true,audio=null,origin=null;
+  let acknowledged=false,sound=true,audio=null,origin=null,praiseLayer=null;
   const effects=new WeakMap();
   try{sound=localStorage.getItem('bridge-sound')!=='off';}catch{}
   const soundButton=document.querySelector('#toggle-game-sound');
@@ -25,30 +25,52 @@
   function instance(board){
     if(!effects.has(board)){
       const host=board.parentElement;host.classList.add('feedback-host');
-      const toast=document.createElement('div');toast.className='feedback-toast';toast.setAttribute('aria-hidden','true');host.append(toast);
-      effects.set(board,{toast,timer:0,shake:0,streak:0});
+      if(!praiseLayer){praiseLayer=document.createElement('div');praiseLayer.className='feedback-layer';praiseLayer.setAttribute('aria-hidden','true');document.body.append(praiseLayer);}
+      const toast=document.createElement('div');toast.className='feedback-toast';toast.setAttribute('aria-hidden','true');praiseLayer.append(toast);
+      effects.set(board,{toast,timer:0,shake:0,streak:0,praise:0,bumping:[],fallback:null});
     }
     return effects.get(board);
   }
   function show(board,text,kind){
-    const fx=instance(board);clearTimeout(fx.timer);fx.toast.textContent=text;fx.toast.className=`feedback-toast is-visible ${kind}`;
-    fx.timer=setTimeout(()=>fx.toast.classList.remove('is-visible'),kind==='win'?1400:850);
+    const fx=instance(board);clearTimeout(fx.timer);fx.toast.textContent=text;fx.toast.className=`feedback-toast ${kind}`;
+    const rect=board.getBoundingClientRect(),width=fx.toast.offsetWidth,height=fx.toast.offsetHeight;
+    const margin=16,screenWidth=window.innerWidth,screenHeight=window.innerHeight;
+    const preferLeft=board.id==='p1-board';
+    let left,top,direction;
+    if(preferLeft&&rect.left>=width+margin*2){left=rect.left-width-margin;top=rect.top+rect.height*.43;direction=-70;}
+    else if(screenWidth-rect.right>=width+margin*2){left=rect.right+margin;top=rect.top+rect.height*.43;direction=70;}
+    else if(rect.left>=width+margin*2){left=rect.left-width-margin;top=rect.top+rect.height*.43;direction=-70;}
+    else{left=rect.left+(rect.width-width)/2;top=rect.top-height-12;direction=preferLeft?-45:45;}
+    fx.toast.style.left=`${Math.max(margin,Math.min(screenWidth-width-margin,left))}px`;
+    fx.toast.style.top=`${Math.max(margin,Math.min(screenHeight-height-margin,top))}px`;
+    fx.toast.style.setProperty('--praise-entry',`${direction}px`);
+    void fx.toast.offsetWidth;fx.toast.classList.add('is-visible');
+    fx.timer=setTimeout(()=>fx.toast.classList.remove('is-visible'),kind==='win'?1700:1250);
   }
   function invalid(board){
-    const fx=instance(board);fx.streak=0;tone('error');show(board,'再試一次','error');
+    const fx=instance(board);fx.streak=0;tone('error');fx.toast.classList.remove('is-visible');
+    fx.bumping.forEach(cell=>cell.classList.remove('preview-bump'));
+    if(fx.fallback)fx.fallback.classList.remove('piece-error');
     if(!reduced.matches){
-      board.classList.remove('placement-shake');void board.offsetWidth;board.classList.add('placement-shake');
-      clearTimeout(fx.shake);fx.shake=setTimeout(()=>board.classList.remove('placement-shake'),280);
+      fx.bumping=Array.from(board.querySelectorAll('.preview-valid,.preview-invalid'));
+      clearTimeout(fx.shake);
+      if(fx.bumping.length){void board.offsetWidth;fx.bumping.forEach(cell=>cell.classList.add('preview-bump'));}
+      else{
+        fx.fallback=board.parentElement.querySelector('.piece-option[aria-pressed="true"]')||document.querySelector('.piece-option[aria-pressed="true"]');
+        if(fx.fallback){void fx.fallback.offsetWidth;fx.fallback.classList.add('piece-error');}
+      }
+      fx.shake=setTimeout(()=>{fx.bumping.forEach(cell=>cell.classList.remove('preview-bump'));if(fx.fallback)fx.fallback.classList.remove('piece-error');},460);
       if(navigator.vibrate)try{navigator.vibrate(35);}catch{}
     }
   }
   function success(board,{cleared=0,won=false,points=40}={}){
     const fx=instance(board);fx.streak++;
-    const phrase=won?'Bridge Complete!':cleared>1?'Amazing!':cleared?'Excellent!':fx.streak>=3?'Great!':'Good!';
+    const phrases=won?['Bridge Complete!','You Did It!','Wonderful Bridge!']:cleared>1?['Amazing!','Incredible!','Outstanding!','Spectacular!']:cleared?['Excellent!','Brilliant!','Beautiful!','Fantastic!']:['Good!','Nice!','Well Done!','Lovely!','Great Move!','Keep It Up!','Smooth!','Wonderful!'];
+    const phrase=phrases[fx.praise++%phrases.length];
     tone(won?'win':cleared?'clear':'place');show(board,`${phrase} ＋${points}`,won?'win':cleared?'clear':'good');
   }
   function reset(board){
-    const fx=effects.get(board);if(!fx)return;clearTimeout(fx.timer);clearTimeout(fx.shake);fx.streak=0;fx.toast.classList.remove('is-visible');board.classList.remove('placement-shake');
+    const fx=effects.get(board);if(!fx)return;clearTimeout(fx.timer);clearTimeout(fx.shake);fx.streak=0;fx.praise=0;fx.toast.classList.remove('is-visible');fx.bumping.forEach(cell=>cell.classList.remove('preview-bump'));if(fx.fallback)fx.fallback.classList.remove('piece-error');
   }
   window.BridgeFeedback={invalid,success,reset,get confirmed(){return acknowledged;}};
   if(soundButton)soundButton.addEventListener('click',()=>{sound=!sound;try{localStorage.setItem('bridge-sound',sound?'on':'off');}catch{}updateSound();if(sound)tone('place');});

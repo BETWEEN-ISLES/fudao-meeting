@@ -72,7 +72,7 @@
     if(!ready||rules.open)return;
     if(game.state!=='playing'){message.textContent='本局已結束，可以重新開始，或查看棋盤上的路線。';return;}
     const outcome=game.place(selected,turns,index%E.COLS,Math.floor(index/E.COLS));
-    if(!outcome.ok){paintPreview(index);FX.invalid(board);message.textContent='這個位置放不下，請避開深紅色區域，或旋轉後再試。';return;}
+    if(!outcome.ok){paintPreview(index);FX.invalid(board);message.textContent='無法放置：超出棋盤或與已有方塊重疊。';return;}
     turns=0;preview=null;cursor=index;render();
     FX.success(board,{cleared:outcome.completed,won:game.state==='won',points:40+outcome.gained+(game.state==='won'?game.bonus:0)});
     message.textContent=outcome.completed?`消除 ${outcome.completed} 橫排！本次加 ${40+outcome.gained} 分；請用剩下的方塊搭橋。`:'已放置方塊，＋40 分。下一塊已準備好。';
@@ -123,4 +123,5 @@
   if(FX.confirmed)ready=true;
   render();
 })();
+
 

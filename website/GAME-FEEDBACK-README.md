@@ -14,3 +14,9 @@
 上傳時一併更新 `bridge.html`、`bridge.js`、`bridge-pk.html`、`bridge-pk.js`，並新增 `bridge-feedback.css`、`bridge-feedback.js`。其餘既有搭橋檔案保留。
 
 程式模擬已檢查：規則確認前禁用棋盤及 PK 倒數、成功／錯誤回饋、音效開關、說明開啟時阻擋遊戲按鍵，以及倒數在閱讀中仍正常結算。實際音色、視覺與裝置震動仍需瀏覽器確認。
+
+## 透明預覽與外側鼓勵字卡更新
++
++預覽以獨立半透明圖層呈現，保留底下既有方塊顏色；錯誤區域使用紅色框與透明斜紋，不再使用實心紅色。錯誤操作時只晃動預覽圖層，既有方塊與棋盤不移動；完全超出邊界而沒有可見預覽格時，改晃動選中的候選方塊。錯誤不再顯示「再試一次」浮動字卡，仍保留簡短狀態文字與音效。
++
++成功鼓勵詞加入 Nice、Well Done、Lovely、Great Move、Keep It Up、Smooth、Wonderful、Brilliant、Beautiful、Fantastic、Incredible、Outstanding、Spectacular、You Did It 等輪替。字卡帶底色，放在獨立的全視窗展示層，優先位於棋盤左右外側；空間不足時置於棋盤上方。字卡不阻擋點擊，也不會造成頁面橫向溢出。

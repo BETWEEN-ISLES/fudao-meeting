@@ -71,7 +71,7 @@
     else if(action==='rotate')player.turns=(player.turns+1)%4;
     else if(action==='place'){
       const result=player.game.place(player.selected,player.turns,player.cursor%6,Math.floor(player.cursor/6));
-      if(!result.ok){player.note='深紅色位置放不下，請移動或旋轉。';render(player);FX.invalid(player.board);return;}
+      if(!result.ok){player.note='無法放置：超出棋盤或與已有方塊重疊。';render(player);FX.invalid(player.board);return;}
       player.turns=0;player.note=result.completed?`消除 ${result.completed} 排，＋${result.gained+40} 分！繼續搭橋。`:'已放置，＋40 分。';
       if(player.game.state==='won'){player.note=`已搭橋！結算 ${player.game.score} 分，等待對手。`;summary.textContent=`玩家 ${player.id} 已完成搭橋，另一位玩家繼續挑戰。`;}
       if(player.game.state==='lost')player.note='已無處可放，未完成搭橋。等待本局結算。';
@@ -104,3 +104,4 @@
   setInterval(checkTime,200);
   if(FX.confirmed){rulesConfirmed=true;start();}
 })();
+
