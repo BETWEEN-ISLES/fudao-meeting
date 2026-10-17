@@ -1,0 +1,41 @@
+/* Shared feedback and entry instructions for the two bridge modes. */
+.bridge-tools{display:flex;gap:9px;align-items:center;justify-content:flex-end;margin:-5px 0 20px;flex-wrap:wrap}
+.bridge-tools button{border:1px solid #a8b59b;border-radius:25px;background:#faf8ec;color:#365f4b;font-size:11px;padding:9px 15px;min-height:38px}
+.bridge-tools button:hover{background:#e4ecd6}
+.cell.color-1{--preview-base:#9cbbcc}.cell.color-2{--preview-base:#c3b2ce}.cell.color-3{--preview-base:#d9c28f}.cell.color-4{--preview-base:#94bda4}.cell.color-5{--preview-base:#c8b098}.cell.color-6{--preview-base:#b5c986}.cell.color-7{--preview-base:#95bfbc}
+.cell.preview-valid,.cell.preview-invalid{background:var(--preview-base,#f5f7e9a8)!important;box-shadow:none!important;border-color:#aabfad!important}
+.cell.preview-valid::after,.cell.preview-invalid::after{content:'';position:absolute;inset:0;z-index:2;width:auto;height:auto;left:0;top:0;border-radius:4px;pointer-events:none;opacity:1;box-sizing:border-box}
+.cell.preview-valid::after{border:2px dashed #315e43;background:#61976d14}
+.cell.preview-invalid::after{border:2px solid #8f2837;background:repeating-linear-gradient(135deg,#a83f473d 0,#a83f473d 4px,transparent 4px,transparent 10px)}
+.pk-player .cell.cursor.preview-invalid{outline-color:#8f2837}
+.cell.preview-bump::after{animation:preview-piece-bump .44s ease-out}
+.piece-error{animation:preview-piece-bump .44s ease-out}
+@keyframes preview-piece-bump{0%,100%{transform:translate(0,0)}15%{transform:translate(-7px,-2px)}30%{transform:translate(7px,1px)}45%{transform:translate(-5px,-1px)}60%{transform:translate(5px,0)}75%{transform:translate(-3px,0)}90%{transform:translate(2px,0)}}
+.feedback-host{position:relative}
+.feedback-layer{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden;contain:layout paint}
+.feedback-toast{position:absolute;z-index:1;pointer-events:none;user-select:none;width:max-content;max-width:calc(100vw - 32px);transform:translate(var(--praise-entry,70px),10px) rotate(5deg) scale(.94);opacity:0;transition:opacity .18s,transform .42s cubic-bezier(.18,.8,.24,1.14);background:#f8e6c8;border:2px solid #a88c58;border-radius:14px;padding:13px 23px;box-shadow:0 7px 0 #c6b38e55,0 12px 30px #254c3c20;color:#55502f;font-weight:600;font-size:clamp(23px,2vw,32px);white-space:nowrap}
+.feedback-toast.is-visible{opacity:1;transform:translate(0,0) rotate(-3deg) scale(1)}
+.feedback-toast.clear{background:#eee6c7;border-color:#a58a4c;color:#665028}
+.feedback-toast.win{background:#e7def0;border-color:#8b72a3;color:#5b426c}
+#game-rules{width:min(620px,calc(100% - 30px));max-height:90dvh;overflow:auto;padding:30px;border:1px solid #b7c6ab;border-radius:14px;background:#f4f1e4;color:#254c3c;box-shadow:0 25px 100px #1c3e4140}
+#game-rules::backdrop{background:#173b4780;backdrop-filter:blur(7px)}
+#game-rules h2{font:500 28px/1.5 'Noto Serif TC',serif;margin:14px 0 18px}
+#game-rules h3{font-size:14px;font-weight:500;margin:18px 0 10px}
+#game-rules p,#game-rules li{font-size:12px;line-height:1.9;color:#526758}
+#game-rules ol{padding-left:22px}
+#game-rules .rules,#game-rules .pk-rules{border:0;padding:0;margin:0}
+#game-rules .rules h2,#game-rules .pk-rules h2{font-size:17px;margin:15px 0 10px}
+#game-rules .rules p,#game-rules .pk-rules p{font-size:12px}
+.rules-keymap{width:100%;border-collapse:collapse;margin:16px 0;font-size:11px}.rules-keymap th,.rules-keymap td{text-align:left;padding:9px;border-bottom:1px solid #c3ceba}
+.rule-exit{display:block;text-align:center;font-size:11px;text-decoration:underline;text-underline-offset:4px;margin-top:5px}
+.rules-duration{padding:12px 14px;background:#e5ecda;border-radius:6px;display:block;font-size:12px;margin:18px 0}
+.rules-duration select{font:inherit;margin-left:15px;padding:6px 12px;background:#faf8ec;color:#254c3c;border:1px solid #a8b59b;border-radius:4px}
+.rules-warning{background:#e5e9d7;padding:12px;border-radius:6px}
+.bridge-layout{grid-template-columns:minmax(0,1.05fr) minmax(280px,.85fr);gap:35px}
+.control-panel .bridge-message{margin-bottom:8px}
+.match-controls{justify-content:space-between}.match-controls p{margin-left:0}
+.pk-summary{min-height:20px}
+@media(max-width:800px){.bridge-layout{grid-template-columns:1fr;gap:20px}.bridge-tools{justify-content:flex-start;margin-top:0}.feedback-toast{font-size:17px;padding:10px 16px}}
+@media(max-width:750px){#game-rules{padding:23px}.rules-keymap th,.rules-keymap td{padding:8px 5px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.cell.preview-bump::after,.piece-error{animation:none}.feedback-toast{transition:none;transform:none}.feedback-toast.is-visible{transform:none}}
+
