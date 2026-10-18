@@ -4,6 +4,7 @@
   const panel=document.querySelector('#game-panel'),title=document.querySelector('#panel-title'),description=document.querySelector('#panel-description');
   const startButton=document.querySelector('#start'),pauseButton=document.querySelector('#pause');
   const scoreLabel=document.querySelector('#score'),bestLabel=document.querySelector('#best'),status=document.querySelector('#game-status');
+  const flapButton=document.querySelector('#flap-flight'),mobile=window.matchMedia('(pointer: coarse)');
   const E=window.IslandFlight,H=E.HEIGHT;
   if(!ctx){description.textContent='瀏覽器無法開啟遊戲畫面，請改用其他瀏覽器。';startButton.disabled=true;return;}
   let W=960,game,scale=1,dpr=1,last=0,accumulator=0,sceneTime=0,best=0,shownState='ready',assetsReady=false;
@@ -25,13 +26,15 @@
     const nextWidth=Math.max(320,Math.round(H*canvas.clientWidth/canvas.clientHeight));
     dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(canvas.clientWidth*dpr);canvas.height=Math.round(canvas.clientHeight*dpr);
     scale=canvas.height/H;
-    if(!game||Math.abs(nextWidth-W)>5){W=nextWidth;game=E.create(Math.random,W);shownState='ready';sync();}
+    if(!game){W=nextWidth;game=E.create(Math.random,W);shownState='ready';sync();}
+    else if(Math.abs(nextWidth-W)>5){const changed=Math.abs(nextWidth-W)/W;W=nextWidth;game.resize(W);if(changed>.25&&game.state==='playing')game.pause();shownState=game.state;sync();}
   }
   function sync(){
     scoreLabel.textContent=String(game.score);
     pauseButton.disabled=!['playing','paused'].includes(game.state);
     pauseButton.textContent=game.state==='paused'?'繼續 ▷':'暫停 Ⅱ';
     panel.hidden=game.state==='playing';
+    flapButton.hidden=game.state!=='playing';
     if(game.state==='over'){
       if(game.score>best){best=game.score;try{localStorage.setItem('between-islands-flight-best',String(best));}catch{}}
       bestLabel.textContent=String(best);title.textContent='在這座島，歇一下。';description.textContent=`這次穿越 ${game.score} 座浮島。調整節奏，再展開一次旅程。`;startButton.textContent='重新挑戰 ↗';
@@ -46,19 +49,29 @@
     if(!assetsReady)return;
     if(game.state==='paused')game.resume();
     else {if(game.state!=='playing')game.reset();game.flap();}
-    accumulator=0;last=0;shownState=game.state;sync();canvas.focus({preventScroll:true});
+    accumulator=0;last=0;shownState=game.state;sync();if(!mobile.matches)canvas.focus({preventScroll:true});
   }
   function pause(){if(game.state==='playing')game.pause();else if(game.state==='paused')game.resume();last=0;accumulator=0;shownState=game.state;sync();}
   startButton.addEventListener('click',action);
   pauseButton.addEventListener('click',pause);
-  canvas.addEventListener('pointerdown',event=>{if(event.button!==0)return;event.preventDefault();if(game.state==='playing')game.flap();else if(game.state==='ready')action();});
+  function flapInput(event){
+    if(event.isPrimary===false||(event.pointerType==='mouse'&&event.button!==0))return;
+    if(event.cancelable)event.preventDefault();event.stopPropagation();
+    if(game.state==='playing')game.flap();else action();
+  }
+  if('PointerEvent' in window){canvas.addEventListener('pointerdown',flapInput,{passive:false});flapButton.addEventListener('pointerdown',flapInput,{passive:false});}
+  else{
+    const tap=event=>{if(event.touches&&event.touches.length>1)return;flapInput(event);};
+    canvas.addEventListener('touchstart',tap,{passive:false});flapButton.addEventListener('touchstart',tap,{passive:false});
+    canvas.addEventListener('mousedown',flapInput);flapButton.addEventListener('mousedown',flapInput);
+  }
   document.addEventListener('keydown',event=>{
     if(event.target.closest('button,a,input,textarea,select'))return;
     if(['Space','ArrowUp'].includes(event.code)){event.preventDefault();if(event.repeat)return;if(game.state==='playing')game.flap();else if(game.state!=='over')action();}
     if(event.code==='KeyP'&&!event.repeat)pause();
   });
   function autoPause(){if(game.state==='playing'){game.pause();shownState=game.state;sync();}last=0;accumulator=0;}
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)autoPause();});window.addEventListener('blur',autoPause);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)autoPause();});window.addEventListener('blur',()=>{if(!mobile.matches)autoPause();});
   window.addEventListener('resize',resize);
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
   function cloud(x,y,size,opacity){ctx.fillStyle=`rgba(255,252,236,${opacity})`;ctx.beginPath();ctx.ellipse(x,y,size,16,0,0,Math.PI*2);ctx.ellipse(x-size*.32,y-12,size*.5,21,0,0,Math.PI*2);ctx.ellipse(x+size*.23,y-14,size*.43,25,0,0,Math.PI*2);ctx.fill();}

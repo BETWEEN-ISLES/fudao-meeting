@@ -1,6 +1,6 @@
 ((root)=>{
   'use strict';
-  const COLS=6,ROWS=7;
+  const COLS=8,ROWS=8;
   const SHAPES=[
     [[0,0],[1,0],[2,0],[3,0]],[[0,0],[1,0],[0,1],[1,1]],
     [[0,0],[1,0],[2,0],[1,1]],[[0,0],[0,1],[0,2],[1,2]],
@@ -19,21 +19,24 @@
     }
     return [];
   }
-  function movesAvailable(board,tray){return tray.some(piece=>{
+  function movesAvailable(board,tray,allowRotation=true){return tray.some(piece=>{
     let shape=SHAPES[piece];
-    for(let r=0;r<4;r++,shape=rotate(shape))for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(fits(board,shape,x,y))return true;
+    for(let r=0;r<(allowRotation?4:1);r++,shape=rotate(shape))for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(fits(board,shape,x,y))return true;
     return false;
   });}
-  function create(random=Math.random){
-    let board,tray,rows,placed,rowPoints,bonus,state,path,history,reason;
+  function create(random=Math.random,options={}){
+    const endless=Boolean(options.endless);
+    let allowRotation=options.allowRotation!==false;
+    let board,tray,rows,placed,rowPoints,bonus,state,path,history,reason,bridges,boards;
     const draw=()=>Math.min(SHAPES.length-1,Math.floor(random()*SHAPES.length));
-    function reset(){board=Array(COLS*ROWS).fill(0);tray=[draw(),draw(),draw()];rows=[];placed=0;rowPoints=0;bonus=0;state='playing';path=[];history=[];reason='';}
+    function reset(){board=Array(COLS*ROWS).fill(0);tray=[draw(),draw(),draw()];rows=[];placed=0;rowPoints=0;bonus=0;state='playing';path=[];history=[];reason='';bridges=0;boards=1;}
     reset();
     function place(slot,turns,x,y){
-      if(state!=='playing'||!Number.isInteger(slot)||slot<0||slot>2)return {ok:false};
+      if(state!=='playing'||!Number.isInteger(slot)||slot<0||slot>2||!Number.isInteger(x)||!Number.isInteger(y)||(!allowRotation&&turns%4!==0))return {ok:false};
       let shape=SHAPES[tray[slot]];for(let n=0;n<turns%4;n++)shape=rotate(shape);
       if(!fits(board,shape,x,y))return {ok:false};
-      history.push({board:[...board],tray:[...tray],rows:[...rows],placed,rowPoints});
+      history.push({board:[...board],tray:[...tray],rows:[...rows],placed,rowPoints,bonus,bridges,boards});
+      if(history.length>30)history.shift();
       for(const [dx,dy]of shape)board[(y+dy)*COLS+x+dx]=tray[slot]+1;
       placed++;const cleared=[];
       for(let r=0;r<ROWS;r++)if(board.slice(r*COLS,(r+1)*COLS).every(Boolean))cleared.push(r);
@@ -44,12 +47,17 @@
       rows.push(...cleared);
       const gained=completed*150+Math.max(0,completed-1)*100;rowPoints+=gained;
       tray[slot]=draw();path=route(board);
-      if(path.length){state='won';bonus=500+board.filter(v=>!v).length*10;}
-      else if(!movesAvailable(board,tray)){state='lost';reason='blocked';}
-      return {ok:true,completed,gained,cleared};
+      let bridged=false,continued=false,bridgeBonus=0;
+      if(path.length){bridged=true;bridges++;bridgeBonus=500+board.filter(v=>!v).length*10;bonus+=bridgeBonus;if(!endless)state='won';}
+      const blocked=!movesAvailable(board,tray,allowRotation);
+      if(endless&&(bridged||blocked)){
+        board=Array(COLS*ROWS).fill(0);path=[];boards++;continued=true;
+        tray=[draw(),draw(),draw()];history=[];
+      }else if(!bridged&&blocked){state='lost';reason='blocked';}
+      return {ok:true,completed,gained,cleared,bridged,continued,bridgeBonus};
     }
-    function undo(){if(state!=='playing'||!history.length)return false;const old=history.pop();({board,tray,rows,placed,rowPoints}=old);bonus=0;path=[];return true;}
-    return {reset,place,undo,expire(){if(state==='playing'){state='lost';reason='time';}},get reason(){return reason},get clearedRows(){return rows.length},get board(){return [...board]},get tray(){return [...tray]},get rows(){return [...rows]},get placed(){return placed},get rowPoints(){return rowPoints},get bonus(){return bonus},get score(){return placed*40+rowPoints+bonus},get state(){return state},get path(){return [...path]},get canUndo(){return state==='playing'&&history.length>0}};
+    function undo(){if(state!=='playing'||!history.length)return false;const old=history.pop();({board,tray,rows,placed,rowPoints,bonus,bridges,boards}=old);path=[];return true;}
+    return {reset,place,undo,setRotationAllowed(value){allowRotation=Boolean(value)},finish(){if(state==='playing'){state='ended';reason='manual';}},expire(){if(state==='playing'){state='lost';reason='time';}},get endless(){return endless},get bridges(){return bridges},get boards(){return boards},get reason(){return reason},get clearedRows(){return rows.length},get board(){return [...board]},get tray(){return [...tray]},get rows(){return [...rows]},get placed(){return placed},get rowPoints(){return rowPoints},get bonus(){return bonus},get score(){return placed*40+rowPoints+bonus},get state(){return state},get path(){return [...path]},get canUndo(){return state==='playing'&&history.length>0}};
   }
   function seeded(seed){let value=seed>>>0;return()=>{value=(value*1664525+1013904223)>>>0;return value/4294967296;};}
   function rank(records){

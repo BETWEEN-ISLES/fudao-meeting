@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e4"><title>方塊搭橋｜浮島之間</title>
+  <link rel="icon" type="image/png" href="assets/fudao-icon.png">
+  <link rel="stylesheet" href="bridge.css?v=clear-pk-2"><link rel="stylesheet" href="brand-logo.css?v=1"><link rel="stylesheet" href="game-selector.css?v=1">
+  <script src="bridge-engine.js?v=clear-pk-2" defer></script><script src="bridge-feedback.js?v=motion-3" defer></script><script src="bridge.js?v=ghost-4" defer></script>
+  <link rel="stylesheet" href="bridge-feedback.css?v=motion-3">
+</head>
+<body>
+  <header class="game-top"><a class="brand" href="index.html"><span class="site-logo"><img src="assets/brand-logo.png?v=1" alt="浮島之間 BETWEEN ISLANDS" width="1431" height="1404"></span></a><nav><a href="index.html">回到首頁</a><a href="works.html">前往作品展 ↗</a></nav></header>
+  <main class="bridge-main">
+    <div class="bridge-heading"><div><p class="kicker">GAME 02 / BUILD A LITTLE CONNECTION</p><h1>把想像，搭成一座橋。</h1></div><p>從起點出發，讓方塊彼此相連。<br>在島嶼之間，拼出屬於你的路。</p></div>
+<nav class="bridge-modes" aria-label="搭橋遊戲模式"><a href="bridge.html" aria-current="page">單人搭橋</a><a href="bridge-pk.html">雙人同機 PK ↗</a></nav>
+<div class="bridge-tools"><button id="show-game-rules" type="button">玩法說明 ?</button><button id="toggle-game-sound" type="button" aria-pressed="true">音效：開</button></div>
+    <div class="bridge-layout">
+      <section class="board-panel" aria-label="方塊搭橋遊戲">
+        <div class="shore finish"><span>終點</span><span>FINISH · 連到上緣任一格</span></div>
+        <div id="bridge-board" class="bridge-board" role="group" aria-label="6 欄 7 列棋盤，使用方向鍵移動，Enter 放置，R 旋轉"></div>
+        <div class="shore start"><span>起點</span><span>START · 從下緣任一格出發</span></div>
+        <p class="board-note">上下左右相接才算連通；斜角接觸不算。</p>
+      </section>
+      <aside class="control-panel" aria-label="方塊選擇與計分">
+        <div class="score-heading"><div><p>本局分數</p><strong id="bridge-score">0</strong></div><div><p>最佳通關</p><strong id="bridge-best">0</strong></div></div>
+        <div class="tray-title"><h2>選擇一塊，搭下一步。</h2><span>每次放置後補入新方塊</span></div>
+        <div id="piece-tray" class="piece-tray" role="group" aria-label="三個候選方塊"></div>
+        <div class="bridge-actions"><button id="rotate-piece" type="button">旋轉 ↻ <span>R</span></button><button id="undo-piece" type="button" disabled>撤回一步</button></div>
+        <p id="bridge-message" class="bridge-message" role="status" aria-live="polite">選擇方塊，再點棋盤放置；也可以拖曳到棋盤。</p>
+        <button id="restart-bridge" class="text-button" type="button">重新開始 ↻</button>
+      </aside>
+    </div>
+    <nav class="game-selector" aria-label="選擇遊戲"><div><span>ANOTHER LITTLE JOURNEY</span><h2>換一種方式，遊逛浮島。</h2></div><a href="flight.html"><span>GAME 01</span><strong>浮島飛行 ↗</strong><small>振翅、滑翔，穿越島嶼</small></a><a href="bridge.html" aria-current="page"><span>GAME 02</span><strong>方塊搭橋 ↗</strong><small>轉個方向，讓起點連上終點</small></a></nav>
+  </main>
+  <footer class="bridge-footer"><span>浮島之間 / BETWEEN ISLANDS</span><a href="works.html">探索 32 座創作島嶼 ↗</a></footer>
+  <dialog id="bridge-result" aria-labelledby="result-title"><button id="close-result" class="close-result" aria-label="關閉結算">×</button><p class="kicker">THE END OF THIS LITTLE JOURNEY</p><h2 id="result-title"></h2><p id="result-description"></p><strong id="result-total"></strong><dl id="result-breakdown"></dl><button id="play-again" class="primary" type="button">再搭一座橋 ↗</button><a href="works.html">前往作品展 →</a></dialog>
+<dialog id="game-rules" aria-labelledby="game-rules-title"><p class="kicker">BEFORE WE BEGIN / 方塊搭橋</p><h2 id="game-rules-title">先看規則，再搭橋。</h2><ol><li>選擇方塊，移動預覽；深紅斜紋代表這裡放不下。</li><li>橫排填滿會加分並消除，其他方塊不下落。</li><li>消排後，剩下的方塊須由底部連到頂部，才算搭橋成功。</li></ol><h3>操作方式</h3><p>點選候選方塊，再點棋盤放置，也可拖曳。用方向鍵移動預覽、Enter 放置、R 旋轉。單人可撤回一步。</p><div class="rules"><h2>先搭橋，還是先拿分？</h2><p>方塊自由放置，沒有下落限制。先消除填滿的橫排，再判定剩下的方塊是否由底部連到頂部；成功連通才算通關。</p><dl><div><dt>每放置一塊</dt><dd>＋40</dd></div><div><dt>填滿一橫排（立即消除）</dt><dd>＋150</dd></div><div><dt>同次每多填滿一排</dt><dd>額外＋100</dd></div><div><dt>成功連橋</dt><dd>＋500</dd></div><div><dt>通關時每個空格</dt><dd>＋10</dd></div></dl><p>橫排消除後，其他方塊不下落；同一排可以再次填滿得分。用剩下的方塊搭橋，才能通關。三個候選方塊都無處可放時，本局結束。</p></div>
+        <button id="confirm-rules" class="primary" type="button" autofocus>確認，開始遊戲</button><a class="rule-exit" href="index.html">先回首頁</a></dialog>
+</body>
+</html>
+
+
+

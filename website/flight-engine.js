@@ -37,7 +37,7 @@
       obstacles=obstacles.filter(o=>o.x+o.width>-20);
       if(bird.y<23||bird.y>HEIGHT-23)state='over';
     }
-    return {reset,flap,step,pause(){if(state==='playing')state='paused';},resume(){if(state==='paused')state='playing';},get bird(){return bird},get obstacles(){return obstacles},get score(){return score},get state(){return state},get elapsed(){return elapsed},get speed(){return speed}};
+    return {reset,flap,step,resize(width){const before=bird.x;viewportWidth=width;bird.x=Math.min(220,width*.23);const shift=bird.x-before;for(const obstacle of obstacles)obstacle.x+=shift;},pause(){if(state==='playing')state='paused';},resume(){if(state==='paused')state='playing';},get bird(){return bird},get obstacles(){return obstacles},get score(){return score},get state(){return state},get elapsed(){return elapsed},get speed(){return speed}};
   }
   const api={WIDTH,HEIGHT,create,polygon,circlePolygon};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;

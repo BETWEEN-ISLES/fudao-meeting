@@ -1,13 +1,15 @@
 (() => {
   'use strict';
-  const E=window.IslandBridge,game=E.create();
+  const E=window.IslandBridge,endless=new URLSearchParams(window.location.search).get('mode')==='endless',game=E.create(Math.random,{endless,allowRotation:!window.BridgeTouch.active});
+  let touchControl=null;
+  const scoreKey=endless?'bridge-endless-best-8':'bridge-classic-best-8';
   const board=document.querySelector('#bridge-board'),tray=document.querySelector('#piece-tray');
   const message=document.querySelector('#bridge-message'),result=document.querySelector('#bridge-result');
   const undoButton=document.querySelector('#undo-piece'),rotateButton=document.querySelector('#rotate-piece');
   const cells=[],names=['長條','正方形','T 型','L 型','反 L 型','S 型','Z 型'];
-  let selected=0,turns=0,preview=null,cursor=36,best=0,drag=null,suppressClick=false,ready=false;
+  let selected=0,turns=0,preview=null,cursor=(E.ROWS-1)*E.COLS,best=0,drag=null,suppressClick=false,ready=false;
   const FX=window.BridgeFeedback,rules=document.querySelector('#game-rules');
-  try{const value=Number(localStorage.getItem('between-islands-bridge-best-v2'));if(Number.isFinite(value)&&value>0)best=Math.floor(value);}catch{}
+  try{const value=Number(localStorage.getItem(scoreKey));if(Number.isFinite(value)&&value>0)best=Math.floor(value);}catch{}
   document.querySelector('#bridge-best').textContent=String(best);
   function shapeFor(slot=selected){
     let shape=E.SHAPES[game.tray[slot]];
@@ -42,21 +44,32 @@
       cell.tabIndex=index===cursor?0:-1;
     });
     document.querySelector('#bridge-score').textContent=String(game.score);
+    document.querySelector('#endless-progress').textContent=`第 ${game.boards} 張棋盤 · ${game.bridges} 座橋`; 
     undoButton.disabled=!ready||!game.canUndo;rotateButton.disabled=!ready||game.state!=='playing';
     makeTray();paintPreview(preview);
   }
   function select(slot){
     if(!ready||rules.open||game.state!=='playing')return;
     selected=slot;turns=0;makeTray();paintPreview(preview);
-    message.textContent=`已選方塊 ${slot+1}（${names[game.tray[slot]]}），點棋盤放置，或按 R 旋轉。`;
+    message.textContent=window.BridgeTouch.active?`已選方塊 ${slot+1}，拖曳到預覽位置後放開。`:`已選方塊 ${slot+1}（${names[game.tray[slot]]}），點棋盤放置，或按 R 旋轉。`;
   }
   function rotate(){
-    if(!ready||rules.open||game.state!=='playing')return;
+    if(!ready||rules.open||window.BridgeTouch.active||game.state!=='playing')return;
     turns=(turns+1)%4;makeTray();paintPreview(preview);message.textContent=`方塊 ${selected+1} 已旋轉 ${turns*90} 度。`;
   }
+  function showEndlessResult(){
+    if(game.score>best){best=game.score;try{localStorage.setItem(scoreKey,String(best));}catch{}document.querySelector('#bridge-best').textContent=String(best);}
+    document.querySelector('#result-title').textContent='這趟旅程，先記在這裡。';
+    document.querySelector('#result-description').textContent=`累計完成 ${game.bridges} 座橋、消除 ${game.clearedRows} 排，遊玩 ${game.boards} 張棋盤。`;
+    document.querySelector('#result-total').textContent=`${game.score} 分`;
+    const list=document.querySelector('#result-breakdown');list.replaceChildren();
+    for(const [label,value]of [['放置方塊',game.placed*40],['消排與多排獎勵',game.rowPoints],['搭橋與空格獎勵',game.bonus]]){const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=String(value);row.append(dt,dd);list.append(row);}
+    result.showModal();
+  }
   function showResult(){
+    if(endless){showEndlessResult();return;}
     const won=game.state==='won';
-    if(won&&game.score>best){best=game.score;try{localStorage.setItem('between-islands-bridge-best-v2',String(best));}catch{}document.querySelector('#bridge-best').textContent=String(best);}
+    if(won&&game.score>best){best=game.score;try{localStorage.setItem(scoreKey,String(best));}catch{}document.querySelector('#bridge-best').textContent=String(best);}
     document.querySelector('#result-title').textContent=won?'島嶼，連上了。':'這條路，先到這裡。';
     document.querySelector('#result-description').textContent=won?'已從起點連到終點！綠色框線標示出你的通關路線。':'目前三個方塊旋轉後都無處可放。換個安排，再試一次。';
     document.querySelector('#result-total').textContent=`${game.score} 分`;
@@ -74,9 +87,10 @@
     const outcome=game.place(selected,turns,index%E.COLS,Math.floor(index/E.COLS));
     if(!outcome.ok){paintPreview(index);FX.invalid(board);message.textContent='無法放置：超出棋盤或與已有方塊重疊。';return;}
     turns=0;preview=null;cursor=index;render();
-    FX.success(board,{cleared:outcome.completed,won:game.state==='won',points:40+outcome.gained+(game.state==='won'?game.bonus:0)});
+    FX.success(board,{cleared:outcome.completed,won:outcome.bridged,points:40+outcome.gained+outcome.bridgeBonus});
     message.textContent=outcome.completed?`消除 ${outcome.completed} 橫排！本次加 ${40+outcome.gained} 分；請用剩下的方塊搭橋。`:'已放置方塊，＋40 分。下一塊已準備好。';
-    if(outcome.cleared.length){for(const r of outcome.cleared)for(let x=0;x<6;x++)cells[r*6+x].classList.add('row-cleared');setTimeout(()=>{for(const cell of cells)cell.classList.remove('row-cleared');},400);}
+    if(outcome.continued)message.textContent=outcome.bridged?`完成一座橋！累計 ${game.bridges} 座，已換新棋盤繼續。`:'棋盤已無處可放，分數保留，換新棋盤繼續。';
+    if(outcome.cleared.length&&!outcome.continued){for(const r of outcome.cleared)for(let x=0;x<E.COLS;x++)cells[r*E.COLS+x].classList.add('row-cleared');setTimeout(()=>{for(const cell of cells)cell.classList.remove('row-cleared');},400);}
     if(game.state!=='playing')showResult();
   }
   for(let i=0;i<E.COLS*E.ROWS;i++){
@@ -92,7 +106,7 @@
     if(event.code==='KeyR'){event.preventDefault();rotate();return;}
     const shifts={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
     if(!shifts[event.key])return;
-    event.preventDefault();const [dx,dy]=shifts[event.key],x=Math.max(0,Math.min(5,cursor%6+dx)),y=Math.max(0,Math.min(6,Math.floor(cursor/6)+dy));cursor=y*6+x;cells[cursor].focus();
+    event.preventDefault();const [dx,dy]=shifts[event.key],x=Math.max(0,Math.min(E.COLS-1,cursor%E.COLS+dx)),y=Math.max(0,Math.min(E.ROWS-1,Math.floor(cursor/E.COLS)+dy));cursor=y*E.COLS+x;cells[cursor].focus();
   });
   tray.addEventListener('click',event=>{if(suppressClick)return;const option=event.target.closest('[data-slot]');if(option)select(Number(option.dataset.slot));});
   tray.addEventListener('pointerdown',event=>{
@@ -113,7 +127,7 @@
   rotateButton.addEventListener('click',rotate);
   undoButton.addEventListener('click',()=>{if(ready&&!rules.open&&game.undo()){FX.reset(board);turns=0;preview=null;render();message.textContent='已撤回上一步，分數與候選方塊也已恢復。';}});
   document.addEventListener('keydown',event=>{if(event.code==='KeyR'&&!event.repeat&&!board.contains(event.target)&&!result.open){event.preventDefault();rotate();}});
-  function restart(){if(!ready)return;if(result.open)result.close();FX.reset(board);game.reset();selected=0;turns=0;cursor=36;preview=null;render();message.textContent='新的旅程開始了。選擇方塊，再點棋盤放置。';cells[cursor].focus();}
+  function restart(){if(!ready)return;if(touchControl)touchControl.cancel();if(result.open)result.close();FX.reset(board);game.reset();selected=0;turns=0;cursor=(E.ROWS-1)*E.COLS;preview=null;render();message.textContent='新的旅程開始了。選擇方塊，再點棋盤放置。';cells[cursor].focus();}
   document.querySelector('#restart-bridge').addEventListener('click',restart);
   document.querySelector('#play-again').addEventListener('click',restart);
   document.querySelector('#close-result').addEventListener('click',()=>result.close());
@@ -121,7 +135,17 @@
   document.addEventListener('bridge:rules-confirm',event=>{if(event.detail.initial){ready=true;render();cells[cursor].focus();message.textContent='開始搭橋！選擇方塊，再點棋盤放置。';}});
   // Confirmation may happen while this deferred script is still downloading.
   if(FX.confirmed)ready=true;
+
+  touchControl=window.BridgeTouch.attach({board,tray,getShape:()=>shapeFor(),getType:()=>game.tray[selected],canPlay:()=>ready&&!rules.open&&game.state==='playing',onSelect:select,onPreview:paintPreview,onDrop:place,onMode:touch=>{game.setRotationAllowed(!touch);if(touch)turns=0;}});
+  document.querySelector('#endless-controls').hidden=!endless;
+  document.querySelector('#endless-rule').hidden=!endless;
+  document.querySelector('#single-mode-link').setAttribute('aria-current',endless?'false':'page');
+  document.querySelector('#endless-mode-link').setAttribute('aria-current',endless?'page':'false');
+  if(endless){document.title='無限搭橋｜浮島之間';document.querySelector('#best-label').textContent='最佳累積';}
+  document.querySelector('#finish-endless').addEventListener('click',()=>{if(ready&&!rules.open&&game.state==='playing'){touchControl.cancel();game.finish();render();showResult();}});
+
   render();
 })();
+
 
 
