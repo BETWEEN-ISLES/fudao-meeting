@@ -8,9 +8,11 @@
   <script src="bridge-touch.js?v=mobile-8" defer></script><script src="bridge-engine.js?v=mobile-8" defer></script><script src="bridge-feedback.js?v=motion-3" defer></script><script src="bridge.js?v=mobile-8" defer></script>
   <link rel="stylesheet" href="bridge-feedback.css?v=motion-3">
   <link rel="stylesheet" href="game-mobile.css?v=mobile-8">
-</head>
+<link rel="stylesheet" href="preview-design.css">
+<script src="preview-experience.js" defer></script>
+<link rel="stylesheet" href="single-screen.css"></head>
 <body>
-  <header class="game-top"><a class="brand" href="index.html"><span class="site-logo"><img src="assets/brand-logo.png?v=1" alt="浮島之間 BETWEEN ISLANDS" width="1431" height="1404"></span></a><nav><a href="index.html">回到首頁</a><a href="works.html">前往作品展 ↗</a></nav></header>
+  <header class="inner-navigation"><a class="brand" href="index.html"><span class="site-logo"><img src="assets/brand-logo.png?v=1" alt="浮島之間 BETWEEN ISLANDS" width="1431" height="1404"></span></a><nav aria-label="主要導覽"><a href="works.html">作品展覽</a><a href="exhibitions.html">展覽資訊</a><a href="games.html">島嶼遊戲</a><a href="about.html">關於浮島</a><a href="index.html">回到首頁 ↗</a></nav></header>
   <main class="bridge-main">
     <div class="bridge-heading"><div><p class="kicker">GAME 02 / BUILD A LITTLE CONNECTION</p><h1>把想像，搭成一座橋。</h1></div><p>從起點出發，讓方塊彼此相連。<br>在島嶼之間，拼出屬於你的路。</p></div>
 <nav class="bridge-modes" aria-label="搭橋遊戲模式"><a id="single-mode-link" href="bridge.html" aria-current="page">單人搭橋</a><a id="endless-mode-link" href="bridge.html?mode=endless">無限模式 ∞</a><a href="bridge-pk.html">雙人同機 PK ↗</a></nav>
@@ -38,6 +40,7 @@
   <dialog id="bridge-result" aria-labelledby="result-title"><button id="close-result" class="close-result" aria-label="關閉結算">×</button><p class="kicker">THE END OF THIS LITTLE JOURNEY</p><h2 id="result-title"></h2><p id="result-description"></p><strong id="result-total"></strong><dl id="result-breakdown"></dl><button id="play-again" class="primary" type="button">再搭一座橋 ↗</button><a href="works.html">前往作品展 →</a></dialog>
 <dialog id="game-rules" aria-labelledby="game-rules-title"><p class="kicker">BEFORE WE BEGIN / 方塊搭橋</p><h2 id="game-rules-title">先看規則，再搭橋。</h2><ol><li>選擇方塊，移動預覽；深紅斜紋代表這裡放不下。</li><li>橫排填滿會加分並消除，其他方塊不下落。</li><li>消排後，剩下的方塊須由底部連到頂部，才算搭橋成功。</li></ol><p class="mobile-control-note">手機操作：長按候選方塊拖曳，方塊會抬到手指上方，對準預覽後放開。手機不旋轉；靠近螢幕上／下緣可自動捲動。</p><h3>操作方式</h3><p>點選候選方塊，再點棋盤放置，也可拖曳。用方向鍵移動預覽、Enter 放置、R 旋轉。單人可撤回一步。</p><div class="rules"><h2>先搭橋，還是先拿分？</h2><p>方塊自由放置，沒有下落限制。先消除填滿的橫排，再判定剩下的方塊是否由底部連到頂部；成功連通才算通關。</p><dl><div><dt>每放置一塊</dt><dd>＋40</dd></div><div><dt>填滿一橫排（立即消除）</dt><dd>＋150</dd></div><div><dt>同次每多填滿一排</dt><dd>額外＋100</dd></div><div><dt>成功連橋</dt><dd>＋500</dd></div><div><dt>通關時每個空格</dt><dd>＋10</dd></div></dl><p>橫排消除後，其他方塊不下落；同一排可以再次填滿得分。用剩下的方塊搭橋，才能通關。三個候選方塊都無處可放時，本局結束。</p></div>
         <p id="endless-rule" class="rules-warning" hidden>無限模式：不限時，搭橋成功或已無處可放時換新棋盤，保留累計分數繼續。按「結算本次」才結束；換棋盤後無法撤回上一張棋盤。</p><button id="confirm-rules" class="primary" type="button" autofocus>確認，開始遊戲</button><a class="rule-exit" href="index.html">先回首頁</a></dialog>
+
 </body>
 </html>
 

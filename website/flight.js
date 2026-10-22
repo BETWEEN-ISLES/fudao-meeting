@@ -30,12 +30,14 @@
     else if(Math.abs(nextWidth-W)>5){const changed=Math.abs(nextWidth-W)/W;W=nextWidth;game.resize(W);if(changed>.25&&game.state==='playing')game.pause();shownState=game.state;sync();}
   }
   function sync(){
+    if(game.state!=='over')document.querySelector('#game-panel #journey-recommendation')?.remove();
     scoreLabel.textContent=String(game.score);
     pauseButton.disabled=!['playing','paused'].includes(game.state);
     pauseButton.textContent=game.state==='paused'?'繼續 ▷':'暫停 Ⅱ';
     panel.hidden=game.state==='playing';
     flapButton.hidden=game.state!=='playing';
     if(game.state==='over'){
+      window.dispatchEvent(new CustomEvent('island:journey-end',{detail:{game:'flight',score:game.score}}));
       if(game.score>best){best=game.score;try{localStorage.setItem('between-islands-flight-best',String(best));}catch{}}
       bestLabel.textContent=String(best);title.textContent='在這座島，歇一下。';description.textContent=`這次穿越 ${game.score} 座浮島。調整節奏，再展開一次旅程。`;startButton.textContent='重新挑戰 ↗';
       status.textContent=`挑戰結束，獲得 ${game.score} 分，最佳 ${best} 分。`;

@@ -1,0 +1,54 @@
+/* Single-screen entrance; shared interior navigation. */
+html.landing-root{height:100%;overflow:hidden;scroll-behavior:auto}
+.landing-root body.home-page{height:100%;overflow:hidden}
+.landing-root .home-page main{height:100%;z-index:2}
+.landing-root .home-page .hero{height:100svh;min-height:0;max-height:none;padding-top:115px;padding-bottom:100px}
+.landing-root #liquid{z-index:3;opacity:var(--liquid-opacity,.62);pointer-events:none}
+.landing-root .sky-glow{z-index:0;pointer-events:none}
+.landing-root .hero>.island-scene{filter:blur(var(--island-blur,4px));opacity:var(--island-visibility,0);transition:none}
+.landing-root .home-page .hero>.eyebrow,.landing-root .home-page .hero>h1,.landing-root .home-page .hero>.subtitle,.landing-root .home-page .hero>.intro,.landing-root .home-page .hero>.enter{z-index:5}
+/* Keep text and the entry button clear while the scene changes beneath them. */
+.landing-root .home-page .hero{isolation:auto}
+.landing-root .home-page main{z-index:auto}
+.landing-root .island-scene{z-index:1}
+.landing-root .hero-coordinate{z-index:5}
+.landing-root .home-page .navigation{z-index:10}
+.landing-root .home-page .hero-bottom{z-index:5;justify-content:center;bottom:34px;text-align:center}
+.landing-root .hero-bottom p{font-size:10px;letter-spacing:.12em}
+.landing-label{font:9px Arial,sans-serif;letter-spacing:.18em;color:#637e70}
+.inner-navigation{position:sticky!important;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:25px;padding:18px 5vw;background:#f6f3e9f5;border-bottom:1px solid #c3ceba;backdrop-filter:blur(14px);color:#254f49}
+.inner-navigation .brand{display:flex;align-items:center;flex-shrink:0}
+.inner-navigation nav{display:flex;align-items:center;gap:26px;flex-wrap:wrap;justify-content:flex-end}
+.inner-navigation nav a{font:12px/1.8 'Noto Sans TC','Microsoft JhengHei',sans-serif;letter-spacing:.04em;white-space:nowrap;text-decoration:none;color:#355e51;border-bottom:1px solid transparent;padding:6px 0}
+.inner-navigation nav a:hover,.inner-navigation nav a[aria-current=page]{border-color:#527d66;color:#244d3f}
+.interior-page{margin:0;background:#f6f3e9;color:#254f49}
+.interior-page .exhibition-route{background:#ecf0df}.interior-page .visit-details{min-height:60vh}
+.interior-page .play-route{min-height:calc(100svh - 110px)}
+.interior-page .islands{min-height:calc(100svh - 110px);padding-top:90px;background:radial-gradient(ellipse at 70% 70%,#c6dfd2,transparent 65%),#f5f2e4}
+.interior-page .section-content{align-items:start}
+@media(max-height:700px) and (min-width:601px){.landing-root .hero-coordinate{top:110px}.landing-root .home-page .hero{padding-top:130px;padding-bottom:55px}.landing-root .home-page .hero .eyebrow{margin-bottom:14px}.landing-root .home-page .hero h1{font-size:clamp(50px,7.5vw,96px);margin-bottom:12px}.landing-root .home-page .hero .subtitle{margin-bottom:12px}.landing-root .home-page .hero .intro{margin-bottom:17px;font-size:12px}.landing-root .home-page .hero .enter{padding:12px 24px}.landing-root .hero-bottom{bottom:18px!important}.landing-root .island-main{top:5%;width:55vw}}
+@media(max-width:700px){.inner-navigation{padding:12px 5vw;gap:15px}.inner-navigation nav{gap:6px 15px}.inner-navigation nav a{font-size:10px}.inner-navigation .site-logo img{max-height:63px}.landing-label{font-size:7px}}
+@media(max-width:600px){.landing-root .home-page .hero{height:100svh;padding:140px 6vw 0;justify-content:flex-start;min-height:0}.landing-root .hero-coordinate{top:107px}.landing-root .home-page .hero .eyebrow{margin-bottom:16px}.landing-root .home-page .hero h1{font-size:clamp(42px,13vw,74px);margin-bottom:15px}.landing-root .home-page .hero .subtitle{margin-bottom:14px}.landing-root .home-page .hero .intro{font-size:11px;line-height:1.9;margin-bottom:22px}.landing-root .home-page .hero .enter{padding:12px 23px}.landing-root .island-main{width:83vw;left:20%;top:52%}.landing-root .island-distant{width:40vw;top:48%;left:-9%}.landing-root .hero-bottom p{font-size:8px}.landing-root .preview-badge span{display:none}.landing-root .preview-badge{bottom:8px;left:8px}.landing-root .home-page .hero-bottom{bottom:38px}.inner-navigation nav{gap:3px 13px;max-width:260px}.interior-page .islands{padding-top:50px}}
+@media(max-width:600px) and (max-height:700px){.landing-root .home-page .hero{padding-top:105px}.landing-root .hero-coordinate{display:none}.landing-root .home-page .hero .eyebrow{margin-bottom:11px;font-size:7px}.landing-root .home-page .hero h1{font-size:12vw;margin-bottom:9px}.landing-root .home-page .hero .intro{margin-bottom:14px;font-size:10px}.landing-root .home-page .hero .subtitle{font-size:11px;margin-bottom:10px}.landing-root .island-main{top:49%;width:79vw;left:26%}.landing-root .home-page .hero-bottom{bottom:25px}}
+@media(max-height:460px) and (orientation:landscape){.landing-root .navigation{padding:10px 5vw}.landing-root .navigation .site-logo img{height:46px;width:auto}.landing-root .hero-coordinate,.landing-root .hero>.intro,.landing-root .hero-bottom{display:none}.landing-root .home-page .hero{padding-top:75px;padding-bottom:30px}.landing-root .hero h1{font-size:55px!important}.landing-root .home-page .hero>.eyebrow{font-size:7px}.landing-root .home-page .hero>.subtitle{font-size:11px}.landing-root .island-main{width:48vw;left:51%;top:0}}
+/* Pointer-driven interaction stays available; automatic island animation still follows reduced-motion preferences. */
+.landing-root #liquid:not([hidden]){display:block!important}
+
+/* Center the entrance while keeping the existing motion compositing intact. */
+.landing-root .home-page .hero{align-items:center;justify-content:center;text-align:center;padding:120px 6vw 100px}
+.landing-root .home-page .hero>.eyebrow,.landing-root .home-page .hero>h1,.landing-root .home-page .hero>.subtitle,.landing-root .home-page .hero>.intro,.landing-root .home-page .hero>.enter{max-width:90vw}
+.landing-root .home-page .hero>.eyebrow{justify-content:center;margin:0 0 30px;font-size:9px;letter-spacing:.34em}
+.landing-root .home-page .hero>h1{font-size:clamp(64px,8.5vw,126px);letter-spacing:.13em;margin:0 0 28px .13em;line-height:1.25}
+.landing-root .home-page .hero>.subtitle{font-size:15px;letter-spacing:.4em;margin:0 0 30px .4em}
+.landing-root .home-page .hero>.intro{font-size:12px;line-height:2.2;letter-spacing:.12em;margin:0 0 31px}
+.landing-root .home-page .hero>.enter{min-width:195px;justify-content:space-between;padding:15px 27px;gap:45px}
+.landing-root .home-page .hero-coordinate{top:auto;bottom:35px;left:5vw;width:auto;text-align:left;font-size:8px;letter-spacing:.12em}
+.landing-root .island-main{width:48vw;left:58%;top:21%}
+.landing-root .island-distant{width:29vw;left:3%;top:12%}
+.landing-root .island-near{width:25vw;left:2%;top:66%;opacity:.5}
+.landing-root .sun-disc{left:61%;top:19%}.landing-root .orbit{left:55%;top:15%}
+@media(max-width:900px){.landing-root .home-page .hero>h1{font-size:10vw}.landing-root .home-page .hero-coordinate{display:none}.landing-root .island-main{left:58%;width:60vw;top:30%}}
+@media(max-width:600px){.landing-root .home-page .hero{padding:115px 5vw 95px;justify-content:center}.landing-root .home-page .hero>h1{font-size:clamp(42px,13vw,76px);letter-spacing:.1em;margin:0 0 23px .1em}.landing-root .home-page .hero>.eyebrow{font-size:7px;letter-spacing:.25em;margin-bottom:23px}.landing-root .home-page .hero>.subtitle{font-size:12px;margin-bottom:25px}.landing-root .home-page .hero>.intro{font-size:11px;line-height:2.1;margin-bottom:26px}.landing-root .home-page .hero>.enter{min-width:180px;padding:13px 23px}.landing-root .island-main{width:85vw;left:38%;top:42%}.landing-root .island-distant{width:45vw;left:-12%;top:16%}.landing-root .island-near{display:none}}
+@media(max-height:700px) and (min-width:601px){.landing-root .home-page .hero{padding:105px 6vw 65px}.landing-root .home-page .hero>h1{font-size:clamp(58px,8vw,96px);margin-bottom:19px}.landing-root .home-page .hero>.eyebrow{margin-bottom:20px}.landing-root .home-page .hero>.subtitle{margin-bottom:19px}.landing-root .home-page .hero>.intro{font-size:11px;margin-bottom:23px}.landing-root .home-page .hero-coordinate{bottom:22px}}
+@media(max-height:700px) and (max-width:600px){.landing-root .home-page .hero{padding-top:100px;padding-bottom:65px}.landing-root .home-page .hero>h1{margin-bottom:18px}.landing-root .home-page .hero>.eyebrow{margin-bottom:18px}.landing-root .home-page .hero>.subtitle{margin-bottom:20px}.landing-root .home-page .hero>.intro{margin-bottom:22px}}
+@media(max-height:460px) and (orientation:landscape){.landing-root .home-page .hero{padding:65px 5vw 25px}.landing-root .home-page .hero>h1{font-size:52px!important;margin-bottom:12px}.landing-root .home-page .hero>.eyebrow{margin-bottom:12px}.landing-root .home-page .hero>.subtitle{margin-bottom:14px}.landing-root .home-page .hero>.enter{padding:9px 22px}}

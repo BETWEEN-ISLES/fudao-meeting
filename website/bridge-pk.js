@@ -45,7 +45,7 @@
     summary.textContent=title;
     for(const player of players){if(player.game.state!=='won')player.note=player.game.reason==='time'?'時間到，未搭橋，無勝利資格。':'無處可放，未搭橋，無勝利資格。';render(player);}
     if(rules.open)rules.close();
-    if(!dialog.open)dialog.showModal();
+    if(!dialog.open)dialog.showModal(); window.dispatchEvent(new CustomEvent('island:journey-end',{detail:{game:'bridge',score:0}}));
   }
   function checkTime(){
     if(!active)return false;

@@ -20,6 +20,7 @@ window.EXHIBITION_WORKS = window.EXHIBITION_CATEGORIES.flatMap(category =>
     group: `${category.label} 第 ${String(index + 1).padStart(2, '0')} 組`,
     title: '作品名稱待公布',
     description: '本組作品介紹將於資料確認後公開。',
+    concept: '', members: [], production: '',
     poster: '',
     trailer: ''
   }))

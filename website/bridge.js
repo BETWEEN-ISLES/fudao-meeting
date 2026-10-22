@@ -64,7 +64,7 @@
     document.querySelector('#result-total').textContent=`${game.score} 分`;
     const list=document.querySelector('#result-breakdown');list.replaceChildren();
     for(const [label,value]of [['放置方塊',game.placed*40],['消排與多排獎勵',game.rowPoints],['搭橋與空格獎勵',game.bonus]]){const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=String(value);row.append(dt,dd);list.append(row);}
-    result.showModal();
+    result.showModal(); window.dispatchEvent(new CustomEvent('island:journey-end',{detail:{game:'bridge',score:game.score}}));
   }
   function showResult(){
     if(endless){showEndlessResult();return;}
@@ -79,7 +79,7 @@
       const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dd.textContent=`＋${value}`;row.append(dt,dd);breakdown.append(row);
     }
     message.textContent=won?`搭橋成功，總分 ${game.score} 分。`:`本局結束，總分 ${game.score} 分。`;
-    result.showModal();
+    result.showModal(); window.dispatchEvent(new CustomEvent('island:journey-end',{detail:{game:'bridge',score:game.score}}));
   }
   function place(index){
     if(!ready||rules.open)return;

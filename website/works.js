@@ -23,6 +23,9 @@
     document.querySelector('#theater-category').textContent = categoryMap.get(work.category).label;
     document.querySelector('#theater-group').textContent = work.group;
     document.querySelector('#theater-description').textContent = work.description;
+    document.querySelector('#work-concept').textContent = work.concept || '創作理念待本組提供。';
+    document.querySelector('#work-members').textContent = work.members?.length ? work.members.join('、') : '製作成員與職務待本組確認。';
+    document.querySelector('#work-production').textContent = work.production || '作品年份、片長／體驗時間與製作工具待確認。';
     mediaError.hidden = true;
     video.pause(); video.removeAttribute('src'); video.removeAttribute('poster'); video.load();
     video.hidden = !work.trailer;
@@ -44,21 +47,20 @@
     }
   }
   function card(work, index) {
-    const article = el('article', `work-card tone-${index % 4}`);
+    const article = el('article', `work-card tone-${index % 4}`); article.id = work.id;
     const poster = el('div', 'poster');
     if (work.poster) {
       const img = el('img'); img.src = work.poster; img.alt = `${work.title}作品海報`; img.loading = 'lazy';
-      img.addEventListener('error', () => { img.remove(); poster.append(el('span', 'poster-note', '作品視覺準備中')); });
+      img.addEventListener('error', () => { img.remove(); poster.append(el('span', 'poster-note', '概念佔位視覺 · 非正式作品海報')); });
       poster.append(img);
     } else {
-      const art = el('div', 'island-art'); art.setAttribute('aria-hidden', 'true');
-      art.append(el('span'), el('span'), el('span'));
-      poster.append(art, el('span', 'poster-note', '作品視覺準備中'));
+      const art = el('div', 'preview-poster-art'); art.setAttribute('aria-hidden', 'true'); const illustration=el('img'); illustration.src='assets/preview-island.svg'; illustration.alt=''; art.append(illustration,el('span','poster-discipline',categoryMap.get(work.category).label));
+      poster.append(art, el('span', 'poster-note', '概念佔位視覺 · 非正式作品海報'));
     }
     poster.append(el('span', 'work-number', String(works.indexOf(work) + 1).padStart(2, '0')));
     const body = el('div', 'card-body');
-    body.append(el('p', 'card-meta', work.group), el('h3', '', work.title), el('p', 'description', work.description));
-    const button = el('button', 'watch', '進入放映室'); button.type = 'button';
+    body.append(el('p', 'card-meta', work.group), el('h3', '', work.title), el('p', 'description', work.description), el('p','creator-credit',work.members?.length ? work.members.join('、') : '創作者資料待公布'));
+    const button = el('button', 'watch', '認識作品與創作者'); button.type = 'button';
     button.setAttribute('aria-label', `進入${work.group}的放映室`);
     button.append(el('span', '', '↗')); button.addEventListener('click', () => openTheater(work, button));
     const bottom = el('div', 'card-bottom'); bottom.append(el('span', 'trailer-state', work.trailer ? '預告片' : '預告片待公布'), button);
@@ -103,5 +105,13 @@
     document.querySelector('#media-message').textContent = '影片暫時無法播放';
   });
   render();
+  const targetId = new URLSearchParams(location.search).get('work');
+  const recommended = works.find(w=>w.id===targetId);
+  if(recommended){
+    const arrival=document.querySelector('#journey-arrival');arrival.hidden=false;
+    arrival.append(el('p','eyebrow','A NEW ISLAND, JUST FOR YOU'),el('h2','',`下一站：${recommended.group}`),el('p','','這是你的遊戲旅程推薦。作品內容與創作者資料將在確認後公開；你也可以自由瀏覽全部作品。'));
+    const reveal=el('button','watch','打開這座島 ↗');reveal.addEventListener('click',()=>openTheater(recommended,reveal));arrival.append(reveal);
+    requestAnimationFrame(()=>arrival.scrollIntoView({behavior:'smooth',block:'center'}));
+  }
 })();
 

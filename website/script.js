@@ -77,7 +77,7 @@
       const measuredSpeed=Math.hypot(mx-oldX,my-oldY)/Math.max(dt,.001);
       motion+=(Math.min(measuredSpeed/1000,1)-motion)*(1-Math.exp(-dt*7));
       const previous=wake[0];
-      if(!reduced.matches && present && measuredSpeed>15 && now-lastSample>24 && (!previous || Math.hypot(pointer.x-previous.x,pointer.y-previous.y)>5)){
+      if(present && measuredSpeed>15 && now-lastSample>24 && (!previous || Math.hypot(pointer.x-previous.x,pointer.y-previous.y)>5)){
         wake.unshift({x:pointer.x,y:pointer.y,time:now,energy:.65+motion*.35});
         if(wake.length>16)wake.pop();lastSample=now;
       }
@@ -103,10 +103,10 @@
       gl.uniform3fv(un.uBg,config.background);gl.uniform1f(un.uPaper,0);
       gl.uniform2f(un.uMouse,mx*bw/Math.max(cw,1),bh-my*bh/Math.max(ch,1));
       gl.uniform1f(un.uOn,on*config.hover);gl.uniform1f(un.uReach,Math.min(config.reach,Math.min(cw,ch)*.48)*bh/Math.max(ch,1));
-      gl.uniform2f(un.uDrag,reduced.matches?0:Math.max(-160,Math.min(160,dragX))*dpr,reduced.matches?0:-Math.max(-160,Math.min(160,dragY))*dpr);
+      gl.uniform2f(un.uDrag,Math.max(-160,Math.min(160,dragX))*dpr,-Math.max(-160,Math.min(160,dragY))*dpr);
       gl.uniform2fv(un['uTrail[0]'],trailData);
       gl.uniform4fv(un['uWake[0]'],wakeData);
-      gl.uniform1f(un.uMotion,reduced.matches?0:motion);
+      gl.uniform1f(un.uMotion,motion);
       gl.uniform1f(un.uTile,Math.max(1,Math.round(config.tile*dpr)));gl.drawArrays(gl.TRIANGLES,0,3);
       raf=requestAnimationFrame(render);
     }
